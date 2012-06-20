@@ -1,0 +1,72 @@
+*linters.txt*   Run linters on your code as you code
+
+Author:  Tim Heap <heap.tim+linters@gmail.com>                *linters-author*
+License: Public domain
+
+                                                                     *linters*
+INTRODUCTION~
+
+This plugin runs your code through a linting program as you write it, to check
+for potential errors and code quality problems. Not only do linters check for
+syntax errors, they can also warn you about using undefined global variables
+(a common symptom of a misspelled variable), unsafe operations, unreachable
+code, or unused imports.
+
+The linter is run every time you save your file, showing the results in Vims
+|quickfix| window. The commands you will likely want to use with this are:
+
+                                                            *linters-commands*
+COMMANDS~
+
+Linters.vim does not expose any commands.
+
+                                                            *linters-defining*
+DEFINING NEW LINTERS
+
+You can define new linter by adding it to {plugin/linters.vim} with the other
+linters. The format is as follows: >
+    call s:DefineLinter("filetype", "linter program", ["errorformat"])
+<
+
+where:
+
+* {"language"} is the Vim filetype for your language. Press {:set filetype} to
+  see what Vim thinks a language is called.
+
+* {"linter program"} is the shell command to run the linter. This should have
+  two placeholders, the first one for the input file to lint, and the second
+  one for the output file containing any errors. Shell piping and redirection
+  is allowed. The JSHint linter command follows, for reference: >
+    jshint %s > %s
+<
+
+* {["errorformat"]} is a list of |errorformat| style strings that your linter
+  will print. This takes after the Vim |errorformat| setting, but instead of
+  having a list of formats separated with spaces, this is a Vimscript list.
+  See the Vim help on |errorformat| for the syntax of this line, just ignore the
+  section on escaping.
+
+You will likely want to wrap your definition in an {if executable("linter")}
+statement, to see if your linting program is available before defining it.
+
+QUICKFIX WINDOW
+
+Linters.vim uses the quick fix window to show its output. For reference, here
+are the commands you are likely to use to navigate using the quickfix window.
+See the |quickfix| window documentation for more commands.
+
+:cc		Jump to the current error. Use this to jump to the first error
+		just after you save
+
+[q		Jump to the next error
+
+]q		Jump to the previous error
+
+                                                               *linters-about*
+ABOUT
+
+Grab the latest version at:
+
+http://bitbucket.org/tim_heap/linters.vim
+
+ vim:tw=78:et:ft=help:norl:
