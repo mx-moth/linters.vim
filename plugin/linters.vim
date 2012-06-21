@@ -107,4 +107,19 @@ if executable("hlint")
 	call s:DefineLinter('haskell', 'hlint %s > %s', ['%f:%l:%c: %m'])
 endif
 
+if executable("php")
+	call s:DefineLinter('php', 'php -l %s &> %s', [
+	\	"%m in %f on line %l",
+	\])
+elseif executable("php5")
+	call s:DefineLinter('php', 'php -l %s &> %s', [
+	\	"%m in %f on line %l",
+	\])
+else
+	let s:linter = 'echo %s":1:1: Error: You''re using PHP" > %s ; exit 1'
+	call s:DefineLinter('php', s:linter, ['%f:%l:%c: %m'])
+endif
+
+
+
 au BufWritePost * call s:RunLinter()
