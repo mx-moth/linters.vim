@@ -92,15 +92,15 @@ if executable("lessc")
 endif
 
 if executable("pylint")
-	call s:DefineLinter('python', "pylint %s > %s 2>/dev/null", [
-	\	"%t:  %l,%c: %m",
-	\	"%t: %l,%c: %m",
-	\	"%t:%l,%c: %m",
+	call s:DefineLinter('python', "pylint %s &> %s", [
+	\	"%t:  %l,%c:%m",
+	\	"%t: %l,%c:%m",
+	\	"%t:%l,%c:%m",
 	\])
 endif
 
 if executable("pyflakes")
-	call s:DefineLinter('python', "pyflakes %s > %s", ["%f:%l: %m"])
+	call s:DefineLinter('python', "pyflakes %s &> %s", ["%f:%l: %m"])
 endif
 
 if executable("hlint")
