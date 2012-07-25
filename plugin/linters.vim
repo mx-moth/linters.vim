@@ -103,6 +103,10 @@ if executable("pyflakes")
 	call s:DefineLinter('python', "pyflakes %s &> %s", ["%f:%l: %m"])
 endif
 
+if executable("pep8")
+	call s:DefineLinter('python', "pep8 --ignore=E127,E128,E125 %s &> %s", ["%f:%l:%c: %t%n %m"])
+endif
+
 if executable("hlint")
 	call s:DefineLinter('haskell', 'hlint %s > %s', ['%f:%l:%c: %m'])
 endif
