@@ -43,6 +43,7 @@ function s:RunLinter()
 		copen
 		execute "cgetfile " . l:temp_file
 	else
+		call setqflist([])
 		cclose
 	endif
 
