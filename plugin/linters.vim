@@ -125,6 +125,9 @@ else
 	call s:DefineLinter('php', s:linter, ['%f:%l:%c: %m'])
 endif
 
+if executable("javac")
+	call s:DefineLinter('java', "javac -Werror -Xlint %s &> %s", ['%f:%l: %m'])
+endif
 
 
 au BufWritePost * call s:RunLinter()
