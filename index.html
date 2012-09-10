@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Linters.vim by maelstrom</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Linters.vim</h1>
+        <p class="header">Automatically run linters over your code as you write it </p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/maelstrom/linters.vim/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/maelstrom/linters.vim/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/maelstrom/linters.vim">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/maelstrom">maelstrom</a></p>
+
+
+      </header>
+      <section>
+        <h1>linters.vim - Check your code for lint as you write</h1>
+
+<p>Linting tools like JSHint and pylint are excellent, but only if you run them
+constantly. You can run them manually when you are finished coding, but then you
+have to go back and edit all of your files again. You can run them as part of
+git hooks, or as part of a make run, but even that is ages after you have
+finished writing that section of code. The best time to run a linter is all of
+the time.</p>
+
+<p><code>linters.vim</code> runs linters over your code every time you save your file. Any
+errors found are displayed instantly in the quickfix window. Writing clean code
+becomes necessary - otherwise your editor will complain at you!</p>
+
+<h2>Installing</h2>
+
+<p>The easiest way to install is through <a href="http://github.com/tpope/pathogen.vim" title="tpope/Pathogen.vim">pathogen.vim</a>. Install
+pathogen, and then:</p>
+
+<pre><code>git clone https://bitbucket.org/tim_heap/linters.vim ~/.vim/bundle/linters
+</code></pre>
+
+<p>Otherwise, copy the <code>plugin/linters.vim</code> file to your <code>~/.vim/plugin/</code>
+directory. It only needs the one file.</p>
+
+<h2>Using</h2>
+
+<p>A number of languages are already supported (see 
+Supported languages below). For any of these languages,
+simply write your code as normal. As soon as you save your changes, the linter
+is run. Any errors or warnings are displayed in the quickfix window.</p>
+
+<p>To jump to the first error, press <code>:cc</code> in normal mode.  You can navigate
+between errors using <code>[q</code> and <code>]q</code>. Save your changes to lint the file again.</p>
+
+<h2>Supported languages</h2>
+
+<p>The following languages are currently supported:</p>
+
+<ul>
+<li>JavaScript, using <a href="https://github.com/jshint/node-jshint" title="jshint/node-jshint">JSHint</a>
+</li>
+<li>LESS, using the <a href="https://github.com/cloudhead/less.js" title="cloudhead/less.js">LESS CSS compiler</a>
+</li>
+<li>Python, using either <a href="http://pypi.python.org/pypi/pylint" title="pypi/pylint">pylint</a> or <a href="http://pypi.python.org/pypi/pyflakes/0.5.0" title="pypi/pyflakes">pyflakes</a>
+</li>
+<li>Haskell, using <a href="http://community.haskell.org/%7Endm/hlint/" title="HLint">hlint</a>
+</li>
+</ul><h3>Adding new languages</h3>
+
+<p>Adding support for new languages is easy. Open up <code>plugin/linters.vim</code>, and add
+your language down the bottom amongst the others. The syntax is:</p>
+
+<pre><code>call s:DefineLinter("filetype", "linter program", ["errorformat"])
+</code></pre>
+
+<p>where:</p>
+
+<ul>
+<li><p><code>language</code> is the Vim filetype for your language. Press <code>:set filetype</code> to see
+what Vim thinks a language is called.</p></li>
+<li>
+<p><code>linter program</code> is the shell command to run the linter. This should have two
+placeholders, the first one for the input file to lint, and the second one for
+the output file containing any errors. Shell piping and redirection is
+allowed. The <a href="https://github.com/jshint/node-jshint" title="jshint/node-jshint">JSHint</a> linter command follows, for reference:</p>
+
+<pre><code>jshint %s &gt; %s
+</code></pre>
+</li>
+<li><p><code>["errorformat"]</code> is a list of <code>errorformat</code> style strings that your linter
+will print. This takes after the Vim <code>errorformat</code> setting, but instead of
+having a list of formats separated with spaces, this is a Vimscript list.
+See the Vim help on <code>errorformat</code> for the syntax of this line, just ignore the
+section on escaping.</p></li>
+</ul><p>You will likely want to wrap your definition in an <code>if executable("linter")</code>
+statement, to see if your linting program is available before defining it.</p>
+
+<h2>Todo</h2>
+
+<ul>
+<li><p>Add support for defining new linters in <code>~/.vimrc</code>. The linter script will
+have to be run before this happens, so that <code>linters#register</code> is available.
+You can define new linters at runtime by calling <code>linters#register</code>, with the
+same signature as <code>s:DefineLinter</code>.</p></li>
+<li><p>Work out if there is a better to run the linter than hooking in to
+<code>BufWritePost</code> on every file open. This seems inefficient.</p></li>
+<li><p>Add more language support - pull requests welcome!</p></li>
+</ul><h2>License</h2>
+
+<p>This plugin is released in to the public domain. Do what you will with it</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
