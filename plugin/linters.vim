@@ -129,5 +129,11 @@ if executable("javac")
 	call s:DefineLinter('java', "javac -Werror -Xlint %s &> %s", ['%f:%l: %m'])
 endif
 
+if executable("dot")
+	call s:DefineLinter('dot', 'dot -Knop -Npos="0,0" -Tdot %s 1>/dev/null 2>%s', [
+	\	'Error: %f:%l: %m',
+	\])
+endif
+
 
 au BufWritePost * call s:RunLinter()
