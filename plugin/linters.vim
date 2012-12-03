@@ -26,12 +26,16 @@ function s:RunLinter()
 	" Get buffers filetype
 	let l:filetype = &ft
 
+	let l:this_file = expand("%:p")
+	if l:this_file =~ '^[a-zA-Z0-9]\+://'
+		return
+	endif
+
 	let l:linter = get(s:linters, l:filetype, s:empty_dict)
 	if l:linter == s:empty_dict
 		return
 	endif
 
-	let l:this_file = expand("%:p")
 	let l:temp_file = tempname()
 	let l:cmd = printf(l:linter['linter'], shellescape(l:this_file), shellescape(l:temp_file))
 
