@@ -135,5 +135,11 @@ if executable("dot")
 	\])
 endif
 
+if executable("tidy")
+	call s:DefineLinter('html', 'tidy -e --alt-text "" -utf8 %s 2>%s', [
+	\	'line %l column %c - %m',
+	\])
+endif
+
 
 au BufWritePost * call s:RunLinter()
