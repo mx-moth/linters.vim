@@ -145,5 +145,10 @@ if executable("tidy")
 	\])
 endif
 
+if executable("splint")
+	call s:DefineLinter('c', 'splint %s &>%s', [
+	\	'%E%f:%l:%v: %m', '%+C %.%#',
+	\])
+endif
 
 au BufWritePost * call s:RunLinter()
