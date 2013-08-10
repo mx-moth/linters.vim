@@ -156,4 +156,11 @@ if executable("splint")
 	\])
 endif
 
+" Load any linters from g:linters_extra, if it exists
+if exists('g:linters_extra')
+	for linter in g:linters_extra
+		call s:DefineLinter(linter[0], linter[1], linter[2])
+	endfor
+endif
+
 au BufWritePost * call s:RunLinter()

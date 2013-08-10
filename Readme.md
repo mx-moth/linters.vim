@@ -18,7 +18,7 @@ Installing
 The easiest way to install is through [pathogen.vim][pathogen]. Install
 pathogen, and then:
 
-	git clone https://bitbucket.org/tim_heap/linters.vim ~/.vim/bundle/linters
+    git clone https://bitbucket.org/tim_heap/linters.vim ~/.vim/bundle/linters
 
 Otherwise, copy the `plugin/linters.vim` file to your `~/.vim/plugin/`
 directory. It only needs the one file.
@@ -46,39 +46,69 @@ The following languages are currently supported:
 
 ### Adding new languages
 
-Adding support for new languages is easy. Open up `plugin/linters.vim`, and add
-your language down the bottom amongst the others. The syntax is:
+Adding support for new languages is easy.
+There are two ways: adding the definition to your ~/.vimrc file,
+or adding it to this plugin itself.
+In either method, you will need three things:
 
-	call s:DefineLinter("filetype", "linter program", ["errorformat"])
+* The vim filetype of the language.
+  Press `:set filetype` to see what Vim thinks a language is called.
 
-where:
+* The command to run to invoke the linter program.
+  This should have two placeholders, the first one for the input file to lint,
+  and the second one for the output file containing any errors.
+  Shell piping and redirection is allowed.
+  The [JSHint][] linter command follows, for reference:
 
-* `language` is the Vim filetype for your language. Press `:set filetype` to see
-  what Vim thinks a language is called.
+      jshint %s > %s
 
-* `linter program` is the shell command to run the linter. This should have two
-  placeholders, the first one for the input file to lint, and the second one for
-  the output file containing any errors. Shell piping and redirection is
-  allowed. The [JSHint][] linter command follows, for reference:
+* A list of `errorformat` style strings that your linter will print.
+  This takes after the Vim `errorformat` setting,
+  but instead of having a list of formats separated with spaces,
+  this is a Vimscript list.
+  See the Vim help on `errorformat` for the syntax of this line,
+  just ignore the section on escaping.
+  For example, the error format list for pylint is:
 
-	  jshint %s > %s
+      [
+      \    "%t:  %l,%c:%m",
+      \    "%t: %l,%c:%m",
+      \    "%t:%l,%c:%m",
+      \]
 
-* `["errorformat"]` is a list of `errorformat` style strings that your linter
-  will print. This takes after the Vim `errorformat` setting, but instead of
-  having a list of formats separated with spaces, this is a Vimscript list.
-  See the Vim help on `errorformat` for the syntax of this line, just ignore the
-  section on escaping.
+You will likely want to wrap any definition in a check to see if the linter
+exists - not everyone will have every linter. For example:
 
-You will likely want to wrap your definition in an `if executable("linter")`
-statement, to see if your linting program is available before defining it.
+    if executable("jshint")
+        " Add the linter definition here
+    endif
+
+### Adding via ~/.vimrc
+
+To add linters in your ~/.vimrc, add them to the `g:linters_extra` array:
+
+    let g:linters_extra = []
+
+    if executable('jshint')
+        let g:linters_extra += [
+        \   ['javascript', 'jshint %s > %s', ["%f: line %l, col %c, %m"]],
+        \]
+    endif
+
+### Adding new definitions to linters.vim
+
+Pull requests for new languages and linters are welcome!
+If you would like to contribute a new definition,
+Edit `plugin/linters.vim` and add your linter definition there.
+The syntax is:
+
+    if executable('jshint')
+        call s:DefineLinter('javascript', 'jshint %s > %s',
+            ["%f: line %l, col %c, %m"])
+    endif
 
 Todo
 ----
-
-* Add support for defining new linters in `~/.vimrc`. The linter script will
-  have to be run before this happens, so that `linters#register` is available.
-  You can define new linters at runtime by calling `linters#register`, with the
-  same signature as `s:DefineLinter`.
 
 * Work out if there is a better to run the linter than hooking in to
   `BufWritePost` on every file open. This seems inefficient.
