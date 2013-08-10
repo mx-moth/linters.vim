@@ -91,6 +91,11 @@ if executable("jshint")
 	call s:DefineLinter("javascript", "jshint %s > %s", ['%f: line %l, col %c, %m'])
 endif
 
+" coffeelint integration for linting coffeescript
+if executable("coffeelint")
+	call s:DefineLinter("coffee", "coffeelint --csv %s > %s", ['%f,%l,error,%m'])
+endif
+
 " LessCSS compiling using lessc and /dev/null
 if executable("lessc")
 	call s:DefineLinter("less", "lessc --no-color %s /dev/null 2> %s", ['%m in %f:%l:%c'])
