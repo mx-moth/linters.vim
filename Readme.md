@@ -107,6 +107,30 @@ The syntax is:
             ["%f: line %l, col %c, %m"])
     endif
 
+Configuration
+-------------
+
+*`g:linters_automatic_on_save`* is a global flag for enabling/disabling the
+automatic running of the linters plugin on every write. Set this to 0 if you do
+not want to lint on every write. Linting can be done manually by running
+`call linters#run()`
+
+*`g:linters_disabled_filetypes`* can contain a list of filetypes that automatic
+linting should be disabled for. If you want to stop linting just one filetype,
+but continue linting others, add the filetype to this list.
+
+    let g:linters_disabled_filetypes = ['javascript']
+
+*`g:linters_extra`* can contain a list of extra linter definitions, to append or
+override to the existing set. It should be a list of triples of the format:
+
+    let g:linters_extra = [
+    \    ['filetype', 'command', ['error', 'format', 'strings']]
+    \]
+
+See the section above on [Adding new languages](#adding-new-languages) for more
+information
+
 Todo
 ----
 

@@ -1,5 +1,27 @@
+" g:linters_automatic_on_save is a global flag for enabling/disabling the
+" automatic running of the linters plugin on every write.
+if !exists('g:linters_automatic_on_save')
+	let g:linters_automatic_on_save = 1
+endif
+
+" g:linters_disabled_filetypes can contain a list of filetypes that automatic
+" linting should be disabled for
+if !exists('g:linters_disabled_filetypes')
+	let g:linters_disabled_filetypes = []
+endif
+
+" g:linters_extra can contain a list of extra linter definitions, to append or
+" override to the existing set. It should be a list of triples of the format::
+"
+"     ['filetype', 'command', ['error', 'format', 'strings']]
+if !exists('g:linters_extra')
+	let g:linters_extra = []
+endif
+
+
 let s:linters = {}
 let s:empty_dict = {}
+
 
 " Escape a single errorformat string, by escaping commas, and then escaping
 " spaces, commas and backslashes. The result should be useable when setting
@@ -74,6 +96,20 @@ endfunction
 function! s:DefineLinter(filetype, linter, errorformats)
 	let l:errorformat_string = s:EscapeErrorFormats(a:errorformats)
 	let s:linters[a:filetype] = {'linter': a:linter, 'errorformat': l:errorformat_string, }
+endfunction
+
+" Check to see if linting should be done. This checks if the linters plugin is
+" disabled, or if linting for the current filetype is disabled, before running
+" the linters.
+function! s:WritePostHook()
+	if !g:linters_automatic_on_save
+		return
+	endif
+	if -1 != index(g:linters_disabled_filetypes, &filetype)
+		return
+	endif
+
+	call s:RunLinter()
 endfunction
 
 " Expose the DefineLinter() function for external use. Has the same
@@ -157,10 +193,8 @@ if executable("splint")
 endif
 
 " Load any linters from g:linters_extra, if it exists
-if exists('g:linters_extra')
-	for linter in g:linters_extra
-		call s:DefineLinter(linter[0], linter[1], linter[2])
-	endfor
-endif
+for linter in g:linters_extra
+	call s:DefineLinter(linter[0], linter[1], linter[2])
+endfor
 
-au BufWritePost * call s:RunLinter()
+au BufWritePost * call s:WritePostHook()
