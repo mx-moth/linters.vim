@@ -18,6 +18,8 @@ if !exists('g:linters_extra')
 	let g:linters_extra = []
 endif
 
+let s:scripts_dir = expand('<sfile>:h:h').'/scripts/'
+
 
 let s:linters = {}
 let s:empty_dict = {}
@@ -189,6 +191,13 @@ endif
 if executable("splint")
 	call s:DefineLinter('c', 'splint %s &>%s', [
 	\	'%E%f:%l:%v: %m', '%+C %.%#',
+	\])
+endif
+
+if executable("escript")
+	let s:erlang_check = s:scripts_dir . 'erlang_check.erl'
+	call s:DefineLinter('erlang', s:erlang_check.' %s > %s 2>&1', [
+	\	'%f:%l: %tarning: %m', '%f:%l: %m', '%+C %.%#',
 	\])
 endif
 
