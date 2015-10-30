@@ -26,7 +26,7 @@ directory. It only needs the one file.
 Using
 -----
 
-A number of languages are already supported (see 
+A number of languages are already supported (see
 Supported languages below). For any of these languages,
 simply write your code as normal. As soon as you save your changes, the linter
 is run. Any errors or warnings are displayed in the quickfix window.
@@ -144,7 +144,7 @@ License
 
 This plugin is released in to the public domain. Do what you will with it
 
-[pathogen]: http://github.com/tpope/pathogen.vim "tpope/Pathogen.vim"
+[pathogen]: https://github.com/tpope/vim-pathogen "tpope/Pathogen.vim"
 [JSHint]: https://github.com/jshint/node-jshint "jshint/node-jshint"
 [LESS CSS compiler]: https://github.com/cloudhead/less.js "cloudhead/less.js"
 [pylint]: http://pypi.python.org/pypi/pylint "pypi/pylint"
