@@ -201,6 +201,10 @@ if executable("escript")
 	\])
 endif
 
+if executable("vint")
+	call s:DefineLinter('vint', 'vint %s > %s', ['%f:%l:%c: %m'])
+endif
+
 " Load any linters from g:linters_extra, if it exists
 for linter in g:linters_extra
 	call s:DefineLinter(linter[0], linter[1], linter[2])
